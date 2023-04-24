@@ -1,10 +1,33 @@
-FROM golang:1.16
+# Базовый образ для Golang
+FROM golang:1.16-alpine AS build
 
-WORKDIR /go/src/app
+# Установка зависимостей
+RUN apk add --no-cache git
+
+# Установка рабочей директории
+WORKDIR /app
+
+# Копирование файлов в рабочую директорию
 COPY . .
 
-RUN go get -d -v ./...
-RUN go install -v ./...
+# Получение зависимостей
+RUN go mod download
 
-CMD ["reminder"]
+# Сборка приложения
+RUN go build -o /go/bin/reminder ./cmd/reminder
+
+# Базовый образ для запуска приложения
+FROM alpine:3.13
+
+# Установка зависимостей
+RUN apk add --no-cache ca-certificates
+
+# Установка рабочей директории
+WORKDIR /app
+
+# Копирование бинарного файла из базового образа для сборки
+COPY --from=build /go/bin/reminder .
+
+# Команда для запуска приложения
+CMD ["./reminder"]
 

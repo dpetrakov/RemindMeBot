@@ -3,9 +3,9 @@ package reminder
 import (
 	"log"
 
-	"github.com/myuser/remindmebot/pkg/bot"
-	"github.com/myuser/remindmebot/pkg/nats"
-	"github.com/myuser/remindmebot/pkg/postgres"
+	"github.com/dpetrakov/remindmebot/pkg/bot"
+	"github.com/dpetrakov/remindmebot/pkg/nats"
+	"github.com/dpetrakov/remindmebot/pkg/postgres"
 )
 
 type ReminderService struct {

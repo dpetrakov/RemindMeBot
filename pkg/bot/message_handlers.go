@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/myuser/remindmebot/pkg/postgres"
+	"github.com/dpetrakov/remindmebot/pkg/postgres"
 
 	"github.com/nats-io/nats.go"
 	"gopkg.in/telegram-bot-api.v4"

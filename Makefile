@@ -1,58 +1,39 @@
-# Переменные
-APP_NAME = RemindMeBot
-DOCKER_COMPOSE_FILE = docker-compose.yml
+# Makefile for RemindMeBot
 
-# Сборка Docker-образов
-build:
-	docker-compose -f $(DOCKER_COMPOSE_FILE) build
+# Environment variables
+ENV_FILE := .env
 
-# Запуск контейнеров
-run:
-	docker-compose -f $(DOCKER_COMPOSE_FILE) up
+# Load environment variables
+include $(ENV_FILE)
+export $(shell sed 's/=.*//' $(ENV_FILE))
 
-# Остановка контейнеров
-stop:
-	docker-compose -f $(DOCKER_COMPOSE_FILE) down
+# Go variables
+GO ?= go
+GOFLAGS ?= $(GOFLAGS:)
 
-# Пересборка контейнеров и запуск приложения
-restart: stop build run
+# Docker variables
+DOCKER_COMPOSE ?= docker-compose
 
-# Очистка ненужных Docker-ресурсов
-clean:
-	docker system prune --force --volumes
+# Targets
+.PHONY: help build clean run test
 
-# Тестирование кода
-test:
-	go test -v ./...
-
-# Проверка кода линтером
-lint:
-	golint ./...
-
-# Проверка кода на наличие ошибок
-vet:
-	go vet ./...
-
-# Сборка и установка приложения на локальной машине
-install:
-	go install ./cmd/bot
-
-# Отображение версии приложения
-version:
-	@echo "$(APP_NAME) version 1.0"
-
-# Помощь по доступным командам
 help:
 	@echo "Usage:"
-	@echo " make build - сборка Docker-образов"
-	@echo " make run - запуск контейнеров"
-	@echo " make stop - остановка контейнеров"
-	@echo " make restart - перезапуск контейнеров"
-	@echo " make clean - очистка ненужных Docker-ресурсов"
-	@echo " make test - тестирование кода"
-	@echo " make lint - проверка кода линтером"
-	@echo " make vet - проверка кода на наличие ошибок"
-	@echo " make install - сборка и установка приложения на локальной машине"
-	@echo " make version - отображение версии приложения"
-	@echo " make help - помощь по доступным командам"
+	@echo "  make build    - build the application"
+	@echo "  make clean    - remove build artifacts"
+	@echo "  make run      - run the application"
+	@echo "  make test     - run tests"
+
+build:
+	$(DOCKER_COMPOSE) build
+
+clean:
+	rm -rf bin/
+
+run:
+	$(DOCKER_COMPOSE) up
+
+test:
+	$(GO) test ./...
+
 

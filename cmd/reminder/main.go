@@ -8,8 +8,8 @@ import (
 	"github.com/nats-io/nats.go"
 	"github.com/spf13/viper"
 
-	"github.com/myuser/remindmebot/pkg/postgres"
-	"github.com/myuser/remindmebot/pkg/reminder"
+	"github.com/dpetrakov/remindmebot/pkg/postgres"
+	"github.com/dpetrakov/remindmebot/pkg/reminder"
 )
 
 func main() {

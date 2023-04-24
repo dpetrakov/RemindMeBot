@@ -1,36 +1,59 @@
-version: "3"
-
+version: '3'
 services:
   bot:
     build:
       context: .
       dockerfile: ./cmd/bot/Dockerfile
-    depends_on:
-      - db
-      - nats
-    env_file:
-      - .env
+    container_name: bot
     environment:
-      - DATABASE_URL=postgres://postgres:$POSTGRES_PASSWORD@db:5432/remindmebot?sslmode=disable
-      - NATS_URL=nats://nats:4222
-    ports:
-      - "8080:8080"
-
-  db:
-    image: postgres
-    restart: always
-    env_file:
-      - .env
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - NATS_HOST=${NATS_HOST}
+      - NATS_PORT=${NATS_PORT}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
     volumes:
-      - ./pkg/postgres/migrations:/docker-entrypoint-initdb.d/
-      - ./data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  nats:
-    image: nats
+      - ./data/bot:/data
     restart: always
+    depends_on:
+      - postgres
+      - nats
+  reminder:
+    build:
+      context: .
+      dockerfile: ./cmd/reminder/Dockerfile
+    container_name: reminder
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - NATS_HOST=${NATS_HOST}
+      - NATS_PORT=${NATS_PORT}
+    restart: always
+    depends_on:
+      - postgres
+      - nats
+  postgres:
+    image: postgres:13-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
     ports:
-      - "4222:4222"
-      - "8222:8222"
+      - "${POSTGRES_PORT}:5432"
+    restart: always
+  nats:
+    image: nats:2.6.2-alpine
+    container_name: nats
+    ports:
+      - "${NATS_PORT}:4222"
+    restart: always
 

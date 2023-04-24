@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/myuser/remindmebot/pkg/postgres"
+	"github.com/dpetrakov/remindmebot/pkg/postgres"
 
 	"github.com/nats-io/nats.go"
 )

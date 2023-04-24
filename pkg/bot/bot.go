@@ -3,7 +3,7 @@ package bot
 import (
 	"log"
 
-	"github.com/myuser/remindmebot/pkg/postgres"
+	"github.com/dpetrakov/remindmebot/pkg/postgres"
 
 	"github.com/nats-io/nats.go"
 	"github.com/spf13/viper"

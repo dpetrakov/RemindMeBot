@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/myuser/remindmebot/pkg/bot"
-	"github.com/myuser/remindmebot/pkg/postgres"
+	"github.com/dpetrakov/remindmebot/pkg/bot"
+	"github.com/dpetrakov/remindmebot/pkg/postgres"
 )
 
 type PostgresReminderStore struct {
